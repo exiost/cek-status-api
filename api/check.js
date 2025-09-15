@@ -3,13 +3,14 @@
 export default async function handler(req, res) {
   let targetUrl;
 
-  // 1. Cek metode request (GET atau POST)
+  // 1. Cek metode request
   if (req.method === 'GET') {
-    // Untuk GET, ambil 'url' dari query string (?url=...)
+    // Untuk GET, ambil 'url' dari query string
     targetUrl = req.query.url;
   } else if (req.method === 'POST') {
-    // Untuk POST, ambil 'url' dari body JSON
-    targetUrl = req.body.url;
+    // Untuk POST, ambil 'url' dari header kustom 'x-target-url'
+    // Nama header otomatis diubah menjadi huruf kecil oleh Vercel/Netlify
+    targetUrl = req.headers['x-target-url'];
   } else {
     // Jika metode lain, tolak permintaan
     res.setHeader('Allow', ['GET', 'POST']);
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
   // 2. Validasi: Pastikan parameter URL ada
   if (!targetUrl) {
     return res.status(400).json({
-      error: 'Parameter "url" tidak ditemukan di query string (untuk GET) atau body (untuk POST).',
+      error: "Parameter 'url' tidak ditemukan di query string (GET) atau header 'x-target-url' (POST).",
     });
   }
 
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
     const response = await fetch(targetUrl, {
       method: 'GET',
       headers: headers,
-      signal: AbortSignal.timeout(10000), // Timeout 10 detik
+      signal: AbortSignal.timeout(10000),
     });
 
     // 5. Kirim kembali hasil status dari website target
