@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const results = await whoiser(domainName);
+    const results = await whoiser(domainName, { host: 'whois.id' });
     const whoisData = results[Object.keys(results)[0]];
 
     console.log(`Pengecekan WHOIS ke ${domainName} berhasil.`);
