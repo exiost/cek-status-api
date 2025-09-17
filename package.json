@@ -5,6 +5,6 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "whoiser": "^1.16.2"
+    "whois-json": "^2.0.4"
   }
 }
